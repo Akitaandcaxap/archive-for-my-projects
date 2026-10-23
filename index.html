@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NikitaYoutubeArchive</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#0b0202',
+                        cardBg: '#170606',
+                        crimsonAccent: '#dc143c',
+                        darkRed: '#8b0000',
+                        deepCrimson: '#4a0000',
+                        redGlow: 'rgba(220, 20, 60, 0.25)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: #0b0202;
+            color: #e5e7eb;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(139, 0, 0, 0.18) 0%, transparent 75%),
+                radial-gradient(circle at 100% 100%, rgba(220, 20, 60, 0.08) 0%, transparent 50%);
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .glass-card {
+            background: rgba(23, 6, 6, 0.75);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(220, 20, 60, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(220, 20, 60, 0.4);
+            box-shadow: 0 8px 32px 0 rgba(220, 20, 60, 0.18);
+        }
+
+        .crimson-glow-btn {
+            background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
+            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .crimson-glow-btn:hover {
+            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
+            transform: translateY(-1px);
+        }
+
+        .crimson-glow-btn:active {
+            transform: translateY(1px);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0202;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #4a0000;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #dc143c;
+        }
+
+        .modal-fade-in {
+            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+
+    <!-- HEADER / NAVBAR -->
+    <header class="sticky top-0 z-30 bg-black/70 backdrop-blur-md border-b border-red-900/30 px-4 lg:px-8 py-4">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-darkRed to-crimsonAccent flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-red-900/40">
+                    <i class="fa-solid fa-photo-film text-lg"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-extrabold tracking-wide text-white flex items-center gap-2">
+                        NikitaYoutubeArchive
+                    </h1>
+                    <p class="text-xs text-red-400/80 font-medium">Галерея медиа и архивов</p>
+                </div>
+            </div>
+
+            <!-- Header Action Button -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button id="welcomeBtn" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-red-950/40 hover:bg-red-900/40 text-red-200 border border-red-800/40 transition-all flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-crimsonAccent"></i>
+                    <span>Инфо</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 flex flex-col">
+
+        <!-- Gallery Header & Stats -->
+        <div class="flex items-center justify-between mb-6">
+            <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2">
+                <i class="fa-solid fa-images text-crimsonAccent"></i>
+                <span>Архив фото</span>
+                <span id="photoCountBadge" class="text-xs bg-red-950 text-red-300 border border-red-800/40 px-2.5 py-0.5 rounded-full font-mono">0</span>
+            </h2>
+            
+            <button id="refreshBtn" onclick="fetchGalleryData()" class="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 bg-black/40 px-3 py-1.5 rounded-lg border border-red-900/30 transition-all">
+                <i class="fa-solid fa-arrows-rotate text-red-400"></i>
+                <span>Обновить</span>
+            </button>
+        </div>
+
+        <!-- Empty State Container -->
+        <div id="emptyState" class="flex-grow flex flex-col items-center justify-center py-20 px-4 text-center">
+            <div class="w-24 h-24 mb-6 rounded-full bg-red-950/30 border border-red-900/30 flex items-center justify-center text-red-500/50 text-4xl shadow-inner">
+                <i class="fa-solid fa-box-open"></i>
+            </div>
+            <h3 class="text-xl font-bold text-red-200 mb-2">Упс... пока что тут ничего нет...</h3>
+            <p class="text-sm text-gray-400 max-w-md">Ждем пока админ загрузит хотя бы одно фото.</p>
+        </div>
+
+        <!-- Image Gallery Grid -->
+        <div id="galleryGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <!-- Gallery items dynamically populated -->
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="mt-auto border-t border-red-900/20 py-6 text-center text-xs text-gray-500">
+        <p>© NikitaYoutubeArchive. Discord: <span class="text-red-400 font-mono">@proudapple</span></p>
+    </footer>
+
+    <!-- WELCOME MODAL -->
+    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
+        <div class="glass-card max-w-md w-full rounded-2xl p-6 sm:p-8 relative border border-crimsonAccent/40 modal-fade-in">
+            <button id="closeWelcomeBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full flex items-center justify-center bg-black/40">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-darkRed to-crimsonAccent flex items-center justify-center text-white text-2xl shadow-lg shadow-red-900/50 mb-5">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <h3 class="text-xl font-extrabold text-white mb-3">Добро пожаловать на архив никиты ютуба.</h3>
+            <p class="text-sm text-gray-300 leading-relaxed mb-6">
+                по вопросам писать в discord <span class="inline-block bg-red-950/80 border border-red-800/50 text-red-300 font-mono font-bold px-2.5 py-1 rounded-lg">@proudapple</span>
+            </p>
+            <button id="dismissWelcomeBtn" class="w-full crimson-glow-btn text-white font-bold py-3 rounded-xl text-sm">
+                Понятно, открыть архив
+            </button>
+        </div>
+    </div>
+
+    <!-- LIGHTBOX / IMAGE MAXIMIZER MODAL -->
+    <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-lg hidden flex-col justify-between p-4 sm:p-8">
+        <!-- Lightbox Header Controls -->
+        <div class="flex items-center justify-between w-full z-10">
+            <span id="lightboxCaption" class="text-sm sm:text-base font-medium text-gray-200 truncate max-w-xs sm:max-w-xl"></span>
+            <div class="flex items-center gap-3">
+                <a id="lightboxOpenLink" href="#" target="_blank" title="Открыть оригинал"
+                    class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                </a>
+                <button id="closeLightboxBtn" title="Закрыть (Esc)"
+                    class="w-10 h-10 rounded-full bg-red-900/40 hover:bg-crimsonAccent text-white flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Lightbox Image Box -->
+        <div class="flex-grow flex items-center justify-center my-4 overflow-hidden relative">
+            <img id="lightboxImage" src="" alt="Maximized photo" class="max-h-full max-w-full object-contain rounded-lg shadow-2xl transition-transform duration-300">
+        </div>
+
+        <!-- Lightbox Footer -->
+        <div class="text-center text-xs text-gray-500 z-10">
+            <span>Нажмите ESC или кликните за пределами фото для закрытия</span>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT APP LOGIC -->
+    <script>
+        let galleryImages = [];
+
+        // DOM Elements
+        const welcomeModal = document.getElementById('welcomeModal');
+        const welcomeBtn = document.getElementById('welcomeBtn');
+        const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
+        const dismissWelcomeBtn = document.getElementById('dismissWelcomeBtn');
+
+        const emptyState = document.getElementById('emptyState');
+        const galleryGrid = document.getElementById('galleryGrid');
+        const photoCountBadge = document.getElementById('photoCountBadge');
+
+        const lightboxModal = document.getElementById('lightboxModal');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxCaption = document.getElementById('lightboxCaption');
+        const lightboxOpenLink = document.getElementById('lightboxOpenLink');
+        const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+
+        // Initialization
+        window.addEventListener('DOMContentLoaded', () => {
+            fetchGalleryData();
+
+            // Show Welcome Modal on first visit
+            if (!localStorage.getItem('nikita_archive_welcome_seen')) {
+                welcomeModal.classList.remove('hidden');
+            }
+        });
+
+        // Fetch data from repo's ./data.json
+        async function fetchGalleryData() {
+            try {
+                // cache-bust param to prevent stale data on GitHub Pages
+                const response = await fetch('./data.json?t=' + Date.now());
+                if (!response.ok) throw new Error('Data file not found or inaccessible');
+                
+                const data = await response.json();
+                if (Array.isArray(data)) {
+                    galleryImages = data;
+                } else {
+                    galleryImages = [];
+                }
+            } catch (error) {
+                console.warn('Could not load data.json or file is empty:', error);
+                galleryImages = [];
+            } finally {
+                renderGallery();
+            }
+        }
+
+        // Render Gallery Grid
+        function renderGallery() {
+            photoCountBadge.textContent = galleryImages.length;
+
+            if (!galleryImages || galleryImages.length === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+                galleryGrid.classList.add('hidden');
+                galleryGrid.innerHTML = '';
+                return;
+            }
+
+            emptyState.classList.add('hidden');
+            emptyState.classList.remove('flex');
+            galleryGrid.classList.remove('hidden');
+
+            galleryGrid.innerHTML = galleryImages.map((img, index) => `
+                <div class="glass-card rounded-2xl overflow-hidden group flex flex-col transition-all duration-300 hover:-translate-y-1 relative">
+                    <div class="relative aspect-square overflow-hidden bg-black/40 cursor-pointer" onclick="openLightbox(${index})">
+                        <img src="${escapeHtml(img.url)}" 
+                             alt="${escapeHtml(img.caption || 'Архивное фото')}" 
+                             loading="lazy"
+                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/170606/dc143c?text= Ошибка+загрузки';"
+                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                            <span class="text-xs text-white font-medium flex items-center gap-1.5">
+                                <i class="fa-solid fa-magnifying-glass-plus text-crimsonAccent"></i> Нажмите чтобы увеличить
+                            </span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-3.5 flex items-center justify-between gap-2 border-t border-red-900/20 bg-black/30">
+                        <p class="text-xs text-gray-300 font-medium truncate">
+                            ${img.caption ? escapeHtml(img.caption) : '<span class="text-gray-600 italic">Без названия</span>'}
+                        </p>
+                        <a href="${escapeHtml(img.url)}" target="_blank" onclick="event.stopPropagation()" title="Открыть оригинал" class="text-xs text-red-400 hover:text-red-300 p-1">
+                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Lightbox Zoom Logic
+        window.openLightbox = function(index) {
+            const item = galleryImages[index];
+            if (!item) return;
+
+            lightboxImage.src = item.url;
+            lightboxCaption.textContent = item.caption || 'Архивное фото';
+            lightboxOpenLink.href = item.url;
+            lightboxModal.classList.remove('hidden');
+            lightboxModal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        function closeLightbox() {
+            lightboxModal.classList.add('hidden');
+            lightboxModal.classList.remove('flex');
+            lightboxImage.src = '';
+            document.body.style.overflow = '';
+        }
+
+        closeLightboxBtn.addEventListener('click', closeLightbox);
+        lightboxModal.addEventListener('click', (e) => {
+            if (e.target === lightboxModal || e.target.id === 'lightboxImage') {
+                closeLightbox();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !lightboxModal.classList.contains('hidden')) {
+                closeLightbox();
+            }
+        });
+
+        // Welcome Modal Listeners
+        welcomeBtn.addEventListener('click', () => welcomeModal.classList.remove('hidden'));
+        closeWelcomeBtn.addEventListener('click', () => welcomeModal.classList.add('hidden'));
+        dismissWelcomeBtn.addEventListener('click', () => {
+            welcomeModal.classList.add('hidden');
+            localStorage.setItem('nikita_archive_welcome_seen', 'true');
+        });
+
+        // Escape HTML Helper
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>"']/g, function(m) {
+                return {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                }[m];
+            });
+        }
+    </script>
+</body>
+</html>
