@@ -94,12 +94,6 @@
       font-weight: 600;
     }
 
-    .header-actions {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
     .btn {
       background: rgba(230, 57, 70, 0.15);
       color: var(--text-color);
@@ -111,6 +105,7 @@
       font-size: 0.9rem;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.4rem;
     }
 
@@ -243,7 +238,6 @@
       background: rgba(230, 57, 70, 0.1);
       padding: 0.15rem 0.5rem;
       border-radius: 4px;
-      cursor: pointer;
     }
 
     .empty-state {
@@ -316,7 +310,7 @@
     .clicker-score {
       font-size: 2.2rem;
       font-weight: 800;
-      margin: 1rem 0;
+      margin: 0.8rem 0;
       color: #fff;
       text-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
     }
@@ -327,7 +321,7 @@
       border-radius: 50%;
       background: linear-gradient(135deg, var(--accent-color), #800f19);
       border: 4px solid rgba(255, 255, 255, 0.2);
-      margin: 0 auto 1.5rem;
+      margin: 0 auto 1.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -336,6 +330,9 @@
       user-select: none;
       transition: transform 0.05s ease, box-shadow 0.2s ease;
       box-shadow: 0 0 20px rgba(230, 57, 70, 0.4);
+      background-size: cover;
+      background-position: center;
+      overflow: hidden;
     }
 
     .click-target:active {
@@ -347,7 +344,7 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 0.75rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.2rem;
     }
 
     .upgrade-btn {
@@ -375,6 +372,7 @@
       display: flex;
       gap: 0.5rem;
       justify-content: center;
+      flex-wrap: wrap;
     }
 
     /* Lightbox */
@@ -405,13 +403,7 @@
       </a>
 
       <div class="uptime-badge">
-        Сайт выживает: <span id="uptime-counter">0д 0ч 0м</span>
-      </div>
-
-      <div class="header-actions">
-        <button class="btn" id="open-clicker-btn" title="Нажми Y на клавиатуре">
-          🎮 Кликер (Нажми Y)
-        </button>
+        Сайт выживает: <span id="uptime-counter">0д 0ч 0м 0с</span>
       </div>
     </div>
   </header>
@@ -442,7 +434,7 @@
     <div class="modal-card clicker-modal">
       <button class="modal-close" id="clicker-close">&times;</button>
       <div class="clicker-title">NikitaYoutubeClicker</div>
-      <p style="color: var(--text-muted); font-size: 0.85rem;">Жми на кнопку и качай прогресс!</p>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Тайный режим кликера</p>
       
       <div class="clicker-score" id="clicker-score">0</div>
 
@@ -460,6 +452,7 @@
       </div>
 
       <div class="data-actions">
+        <button class="btn" id="change-skin-btn">🎨 Скин</button>
         <button class="btn" id="export-btn">💾 Экспорт</button>
         <button class="btn" id="import-btn">📥 Импорт</button>
         <input type="file" id="import-file" accept=".json" style="display: none;">
@@ -468,13 +461,13 @@
   </div>
 
   <footer>
-    NikitaYoutubeArchive &copy; <span id="year"></span>. Нажми Y для вызова кликера.
+    NikitaYoutubeArchive &copy; <span id="year"></span>
   </footer>
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // === 1. UPTIME COUNTER (Отсчет от 23.10.2026) ===
+    // === 1. UPTIME COUNTER (Отсчет с секундами от 23.10.2026) ===
     const START_DATE = new Date('2026-10-23T00:00:00');
 
     function updateUptime() {
@@ -484,8 +477,9 @@
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((diff / (1000 * 60)) % 60);
+      const seconds = Math.floor((diff / 1000) % 60);
 
-      document.getElementById('uptime-counter').textContent = `${days}д ${hours}ч ${minutes}м`;
+      document.getElementById('uptime-counter').textContent = `${days}д ${hours}ч ${minutes}м ${seconds}с`;
     }
     setInterval(updateUptime, 1000);
     updateUptime();
@@ -596,13 +590,14 @@
       document.getElementById('lightbox-modal').classList.remove('active');
     });
 
-    // === 3. NIKITA YOUTUBE CLICKER + SAVE/EXPORT/IMPORT ===
+    // === 3. SECRET CLICKER + CUSTOM SKIN ===
     let game = {
       score: 0,
       clickPower: 1,
       autoPower: 0,
       costClick: 10,
-      costAuto: 50
+      costAuto: 50,
+      skinUrl: ''
     };
 
     function loadGame() {
@@ -624,6 +619,15 @@
 
       document.getElementById('upg-click').disabled = game.score < game.costClick;
       document.getElementById('upg-auto').disabled = game.score < game.costAuto;
+
+      const target = document.getElementById('click-target');
+      if (game.skinUrl) {
+        target.style.backgroundImage = `url('${game.skinUrl}')`;
+        target.textContent = '';
+      } else {
+        target.style.backgroundImage = 'none';
+        target.textContent = '🎬';
+      }
     }
 
     // Target Click
@@ -649,6 +653,16 @@
         game.score -= game.costAuto;
         game.autoPower += 1;
         game.costAuto = Math.floor(game.costAuto * 1.6);
+        saveGame();
+        updateClickerUI();
+      }
+    });
+
+    // Change Skin
+    document.getElementById('change-skin-btn').addEventListener('click', () => {
+      const url = prompt('Введи ссылку на изображение для скина (или оставь пустым для сброса):', game.skinUrl || '');
+      if (url !== null) {
+        game.skinUrl = url.trim();
         saveGame();
         updateClickerUI();
       }
@@ -707,10 +721,9 @@
       clickerModal.classList.remove('active');
     }
 
-    document.getElementById('open-clicker-btn').addEventListener('click', openClicker);
     document.getElementById('clicker-close').addEventListener('click', closeClicker);
 
-    // Hotkey Y
+    // Hotkey Y / Н
     window.addEventListener('keydown', (e) => {
       if (e.key === 'y' || e.key === 'Y' || e.key === 'н' || e.key === 'Н') {
         if (clickerModal.classList.contains('active')) {
