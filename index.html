@@ -1,359 +1,729 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NikitaYoutubeArchive</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts Inter -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NikitaYoutubeArchive</title>
+  <style>
+    :root {
+      --bg-color: #0d0607;
+      --card-bg: rgba(30, 10, 12, 0.6);
+      --accent-color: #e63946;
+      --accent-hover: #ff4d5a;
+      --text-color: #f1faee;
+      --text-muted: #a8a2a4;
+      --border-color: rgba(230, 57, 70, 0.2);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        darkBg: '#0b0202',
-                        cardBg: '#170606',
-                        crimsonAccent: '#dc143c',
-                        darkRed: '#8b0000',
-                        deepCrimson: '#4a0000',
-                        redGlow: 'rgba(220, 20, 60, 0.25)',
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-    <style>
-        body {
-            background-color: #0b0202;
-            color: #e5e7eb;
-            font-family: 'Inter', sans-serif;
-            background-image: 
-                radial-gradient(circle at 50% 0%, rgba(139, 0, 0, 0.18) 0%, transparent 75%),
-                radial-gradient(circle at 100% 100%, rgba(220, 20, 60, 0.08) 0%, transparent 50%);
-            background-attachment: fixed;
-            min-height: 100vh;
-        }
+    body {
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 20% 20%, rgba(230, 57, 70, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 80% 80%, rgba(120, 15, 25, 0.2) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
 
-        .glass-card {
-            background: rgba(23, 6, 6, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(220, 20, 60, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-        }
+    header {
+      background: rgba(15, 5, 7, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+    }
 
-        .glass-card:hover {
-            border-color: rgba(220, 20, 60, 0.4);
-            box-shadow: 0 8px 32px 0 rgba(220, 20, 60, 0.18);
-        }
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
 
-        .crimson-glow-btn {
-            background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
-            box-shadow: 0 4px 15px rgba(220, 20, 60, 0.3);
-            transition: all 0.3s ease;
-        }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--text-color);
+      text-decoration: none;
+    }
 
-        .crimson-glow-btn:hover {
-            box-shadow: 0 6px 20px rgba(220, 20, 60, 0.5);
-            transform: translateY(-1px);
-        }
+    .logo-icon {
+      width: 38px;
+      height: 38px;
+      background: linear-gradient(135deg, var(--accent-color), #800f19);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(230, 57, 70, 0.4);
+      font-size: 1.2rem;
+    }
 
-        .crimson-glow-btn:active {
-            transform: translateY(1px);
-        }
+    .uptime-badge {
+      background: rgba(230, 57, 70, 0.1);
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0b0202;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #4a0000;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #dc143c;
-        }
+    .uptime-badge span {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
 
-        .modal-fade-in {
-            animation: fadeIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+    .header-actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-    </style>
+    .btn {
+      background: rgba(230, 57, 70, 0.15);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .btn:hover {
+      background: var(--accent-color);
+      border-color: var(--accent-color);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(230, 57, 70, 0.3);
+    }
+
+    main {
+      max-width: 1200px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      flex: 1;
+      width: 100%;
+    }
+
+    /* Tag Filters */
+    .filter-section {
+      margin-bottom: 2rem;
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      padding: 1rem 1.25rem;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .filter-title {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .tags-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+      padding: 0.3rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tag-btn:hover, .tag-btn.active {
+      background: var(--accent-color);
+      color: #fff;
+      border-color: var(--accent-color);
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--glass-border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: var(--border-color);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(230, 57, 70, 0.2);
+    }
+
+    .card-image-wrap {
+      width: 100%;
+      height: 220px;
+      overflow: hidden;
+      background: rgba(0, 0, 0, 0.3);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .card-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease;
+    }
+
+    .card:hover .card-image {
+      transform: scale(1.05);
+    }
+
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      flex: 1;
+    }
+
+    .card-caption {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      color: var(--text-color);
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: auto;
+      padding-top: 0.5rem;
+    }
+
+    .inline-tag {
+      font-size: 0.75rem;
+      color: var(--accent-color);
+      background: rgba(230, 57, 70, 0.1);
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 4rem 2rem;
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1px dashed var(--border-color);
+      margin: 2rem 0;
+    }
+
+    /* Modal / Lightbox / Clicker Styles */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: #14080a;
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      max-width: 500px;
+      width: 100%;
+      padding: 1.5rem;
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: var(--accent-color);
+    }
+
+    /* Clicker Game Specifics */
+    .clicker-modal {
+      text-align: center;
+    }
+
+    .clicker-title {
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      margin-bottom: 0.5rem;
+    }
+
+    .clicker-score {
+      font-size: 2.2rem;
+      font-weight: 800;
+      margin: 1rem 0;
+      color: #fff;
+      text-shadow: 0 0 10px rgba(230, 57, 70, 0.5);
+    }
+
+    .click-target {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), #800f19);
+      border: 4px solid rgba(255, 255, 255, 0.2);
+      margin: 0 auto 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 0.05s ease, box-shadow 0.2s ease;
+      box-shadow: 0 0 20px rgba(230, 57, 70, 0.4);
+    }
+
+    .click-target:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 30px rgba(230, 57, 70, 0.8);
+    }
+
+    .clicker-upgrades {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .upgrade-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      padding: 0.75rem;
+      border-radius: 10px;
+      color: var(--text-color);
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-align: left;
+    }
+
+    .upgrade-btn:hover:not(:disabled) {
+      border-color: var(--accent-color);
+      background: rgba(230, 57, 70, 0.1);
+    }
+
+    .upgrade-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .data-actions {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+    }
+
+    /* Lightbox */
+    .lightbox-img {
+      max-width: 90vw;
+      max-height: 85vh;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      margin-top: auto;
+    }
+  </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body>
 
-    <!-- HEADER / NAVBAR -->
-    <header class="sticky top-0 z-30 bg-black/70 backdrop-blur-md border-b border-red-900/30 px-4 lg:px-8 py-4">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-darkRed to-crimsonAccent flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-red-900/40">
-                    <i class="fa-solid fa-photo-film text-lg"></i>
-                </div>
-                <div>
-                    <h1 class="text-xl font-extrabold tracking-wide text-white flex items-center gap-2">
-                        NikitaYoutubeArchive
-                    </h1>
-                    <p class="text-xs text-red-400/80 font-medium">Галерея медиа и архивов</p>
-                </div>
-            </div>
+  <header>
+    <div class="header-container">
+      <a href="#" class="logo">
+        <div class="logo-icon">📷</div>
+        <span>NikitaYoutubeArchive</span>
+      </a>
 
-            <!-- Header Action Button -->
-            <div class="flex items-center gap-2 sm:gap-3">
-                <button id="welcomeBtn" class="px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-red-950/40 hover:bg-red-900/40 text-red-200 border border-red-800/40 transition-all flex items-center gap-2">
-                    <i class="fa-solid fa-circle-info text-crimsonAccent"></i>
-                    <span>Инфо</span>
-                </button>
-            </div>
-        </div>
-    </header>
+      <div class="uptime-badge">
+        Сайт выживает: <span id="uptime-counter">0д 0ч 0м</span>
+      </div>
 
-    <!-- MAIN CONTENT AREA -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 lg:px-8 py-8 flex flex-col">
+      <div class="header-actions">
+        <button class="btn" id="open-clicker-btn" title="Нажми Y на клавиатуре">
+          🎮 Кликер (Нажми Y)
+        </button>
+      </div>
+    </div>
+  </header>
 
-        <!-- Gallery Header & Stats -->
-        <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-bold text-gray-200 flex items-center gap-2">
-                <i class="fa-solid fa-images text-crimsonAccent"></i>
-                <span>Архив фото</span>
-                <span id="photoCountBadge" class="text-xs bg-red-950 text-red-300 border border-red-800/40 px-2.5 py-0.5 rounded-full font-mono">0</span>
-            </h2>
-            
-            <button id="refreshBtn" onclick="fetchGalleryData()" class="text-xs text-gray-400 hover:text-white flex items-center gap-1.5 bg-black/40 px-3 py-1.5 rounded-lg border border-red-900/30 transition-all">
-                <i class="fa-solid fa-arrows-rotate text-red-400"></i>
-                <span>Обновить</span>
-            </button>
-        </div>
-
-        <!-- Empty State Container -->
-        <div id="emptyState" class="flex-grow flex flex-col items-center justify-center py-20 px-4 text-center">
-            <div class="w-24 h-24 mb-6 rounded-full bg-red-950/30 border border-red-900/30 flex items-center justify-center text-red-500/50 text-4xl shadow-inner">
-                <i class="fa-solid fa-box-open"></i>
-            </div>
-            <h3 class="text-xl font-bold text-red-200 mb-2">Упс... пока что тут ничего нет...</h3>
-            <p class="text-sm text-gray-400 max-w-md">Ждем пока админ загрузит хотя бы одно фото.</p>
-        </div>
-
-        <!-- Image Gallery Grid -->
-        <div id="galleryGrid" class="hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <!-- Gallery items dynamically populated -->
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer class="mt-auto border-t border-red-900/20 py-6 text-center text-xs text-gray-500">
-        <p>© NikitaYoutubeArchive. Все права обблёваны. <span class="text-red-400 font-mono">Хули смотришь?</span></p>
-    </footer>
-
-    <!-- WELCOME MODAL -->
-    <div id="welcomeModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md hidden">
-        <div class="glass-card max-w-md w-full rounded-2xl p-6 sm:p-8 relative border border-crimsonAccent/40 modal-fade-in">
-            <button id="closeWelcomeBtn" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors w-8 h-8 rounded-full flex items-center justify-center bg-black/40">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-            <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-darkRed to-crimsonAccent flex items-center justify-center text-white text-2xl shadow-lg shadow-red-900/50 mb-5">
-                <i class="fa-solid fa-bullhorn"></i>
-            </div>
-            <h3 class="text-xl font-extrabold text-white mb-3">Добро пожаловать на архив никиты ютуба.</h3>
-            <p class="text-sm text-gray-300 leading-relaxed mb-6">
-                если вам че то не нравится <span class="inline-block bg-red-950/80 border border-red-800/50 text-red-300 font-mono font-bold px-2.5 py-1 rounded-lg">ИДИТЕ НАХУЙ</span>
-            </p>
-            <button id="dismissWelcomeBtn" class="w-full crimson-glow-btn text-white font-bold py-3 rounded-xl text-sm">
-                Понятно, открыть архив
-            </button>
-        </div>
+  <main>
+    <div class="filter-section">
+      <div class="filter-title">Фильтр по тегам:</div>
+      <div class="tags-container" id="tags-filter">
+        <button class="tag-btn active" data-tag="all">Все теги</button>
+      </div>
     </div>
 
-    <!-- LIGHTBOX / IMAGE MAXIMIZER MODAL -->
-    <div id="lightboxModal" class="fixed inset-0 z-50 bg-black/95 backdrop-blur-lg hidden flex-col justify-between p-4 sm:p-8">
-        <!-- Lightbox Header Controls -->
-        <div class="flex items-center justify-between w-full z-10">
-            <span id="lightboxCaption" class="text-sm sm:text-base font-medium text-gray-200 truncate max-w-xs sm:max-w-xl"></span>
-            <div class="flex items-center gap-3">
-                <a id="lightboxOpenLink" href="#" target="_blank" title="Открыть оригинал"
-                    class="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-all">
-                    <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                </a>
-                <button id="closeLightboxBtn" title="Закрыть (Esc)"
-                    class="w-10 h-10 rounded-full bg-red-900/40 hover:bg-crimsonAccent text-white flex items-center justify-center transition-all">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-            </div>
-        </div>
-
-        <!-- Lightbox Image Box -->
-        <div class="flex-grow flex items-center justify-center my-4 overflow-hidden relative">
-            <img id="lightboxImage" src="" alt="Maximized photo" class="max-h-full max-w-full object-contain rounded-lg shadow-2xl transition-transform duration-300">
-        </div>
-
-        <!-- Lightbox Footer -->
-        <div class="text-center text-xs text-gray-500 z-10">
-            <span>Нажмите ESC или кликните за пределами фото для закрытия</span>
-        </div>
+    <div id="gallery-grid" class="gallery-grid"></div>
+    <div id="empty-state" class="empty-state" style="display: none;">
+      <h3>Упс... пока что тут ничего нет...</h3>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Ждем пока админ загрузит хотя бы одно фото.</p>
     </div>
+  </main>
 
-    <!-- JAVASCRIPT APP LOGIC -->
-    <script>
-        let galleryImages = [];
+  <!-- Lightbox Modal -->
+  <div class="modal-overlay" id="lightbox-modal">
+    <button class="modal-close" id="lightbox-close">&times;</button>
+    <img src="" alt="" class="lightbox-img" id="lightbox-img">
+  </div>
 
-        // DOM Elements
-        const welcomeModal = document.getElementById('welcomeModal');
-        const welcomeBtn = document.getElementById('welcomeBtn');
-        const closeWelcomeBtn = document.getElementById('closeWelcomeBtn');
-        const dismissWelcomeBtn = document.getElementById('dismissWelcomeBtn');
+  <!-- Clicker Game Modal -->
+  <div class="modal-overlay" id="clicker-modal">
+    <div class="modal-card clicker-modal">
+      <button class="modal-close" id="clicker-close">&times;</button>
+      <div class="clicker-title">NikitaYoutubeClicker</div>
+      <p style="color: var(--text-muted); font-size: 0.85rem;">Жми на кнопку и качай прогресс!</p>
+      
+      <div class="clicker-score" id="clicker-score">0</div>
 
-        const emptyState = document.getElementById('emptyState');
-        const galleryGrid = document.getElementById('galleryGrid');
-        const photoCountBadge = document.getElementById('photoCountBadge');
+      <div class="click-target" id="click-target">🎬</div>
 
-        const lightboxModal = document.getElementById('lightboxModal');
-        const lightboxImage = document.getElementById('lightboxImage');
-        const lightboxCaption = document.getElementById('lightboxCaption');
-        const lightboxOpenLink = document.getElementById('lightboxOpenLink');
-        const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+      <div class="clicker-upgrades">
+        <button class="upgrade-btn" id="upg-click">
+          <strong>+1 к клику</strong><br>
+          <span style="color: var(--text-muted);">Цена: <span id="cost-click">10</span></span>
+        </button>
+        <button class="upgrade-btn" id="upg-auto">
+          <strong>+1 в сек (Авто)</strong><br>
+          <span style="color: var(--text-muted);">Цена: <span id="cost-auto">50</span></span>
+        </button>
+      </div>
 
-        // Initialization
-        window.addEventListener('DOMContentLoaded', () => {
-            fetchGalleryData();
+      <div class="data-actions">
+        <button class="btn" id="export-btn">💾 Экспорт</button>
+        <button class="btn" id="import-btn">📥 Импорт</button>
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+      </div>
+    </div>
+  </div>
 
-            // Show Welcome Modal on first visit
-            if (!localStorage.getItem('nikita_archive_welcome_seen')) {
-                welcomeModal.classList.remove('hidden');
-            }
+  <footer>
+    NikitaYoutubeArchive &copy; <span id="year"></span>. Нажми Y для вызова кликера.
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // === 1. UPTIME COUNTER (Отсчет от 23.10.2026) ===
+    const START_DATE = new Date('2026-10-23T00:00:00');
+
+    function updateUptime() {
+      const now = new Date();
+      const diff = Math.max(0, now - START_DATE);
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+      const minutes = Math.floor((diff / (1000 * 60)) % 60);
+
+      document.getElementById('uptime-counter').textContent = `${days}д ${hours}ч ${minutes}м`;
+    }
+    setInterval(updateUptime, 1000);
+    updateUptime();
+
+    // === 2. GALLERY & HASHTAGS ===
+    let allPhotos = [];
+    let currentTag = 'all';
+
+    async function loadGallery() {
+      try {
+        const res = await fetch('./data.json');
+        if (!res.ok) throw new Error();
+        allPhotos = await res.json();
+        renderTagsFilter();
+        renderGallery();
+      } catch (e) {
+        document.getElementById('gallery-grid').style.display = 'none';
+        document.getElementById('empty-state').style.display = 'block';
+      }
+    }
+
+    function extractTags(item) {
+      const tags = new Set(item.tags || []);
+      if (item.caption) {
+        const matches = item.caption.match(/#[a-zA-Zа-яА-Я0-9_]+/g);
+        if (matches) {
+          matches.forEach(t => tags.add(t.replace('#', '')));
+        }
+      }
+      return Array.from(tags);
+    }
+
+    function renderTagsFilter() {
+      const tagSet = new Set();
+      allPhotos.forEach(item => {
+        extractTags(item).forEach(tag => tagSet.add(tag));
+      });
+
+      const container = document.getElementById('tags-filter');
+      container.innerHTML = '<button class="tag-btn active" data-tag="all">Все теги</button>';
+
+      tagSet.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.className = 'tag-btn';
+        btn.dataset.tag = tag;
+        btn.textContent = `#${tag}`;
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentTag = tag;
+          renderGallery();
+        });
+        container.appendChild(btn);
+      });
+
+      container.querySelector('[data-tag="all"]').addEventListener('click', (e) => {
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentTag = 'all';
+        renderGallery();
+      });
+    }
+
+    function renderGallery() {
+      const grid = document.getElementById('gallery-grid');
+      grid.innerHTML = '';
+
+      const filtered = allPhotos.filter(item => {
+        if (currentTag === 'all') return true;
+        return extractTags(item).includes(currentTag);
+      });
+
+      if (filtered.length === 0) {
+        document.getElementById('empty-state').style.display = 'block';
+        return;
+      } else {
+        document.getElementById('empty-state').style.display = 'none';
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const tags = extractTags(item);
+        const tagsHtml = tags.map(t => `<span class="inline-tag">#${t}</span>`).join(' ');
+
+        card.innerHTML = `
+          <div class="card-image-wrap">
+            <img src="${item.url}" alt="Photo" class="card-image" loading="lazy">
+          </div>
+          <div class="card-content">
+            <div class="card-caption">${item.caption || ''}</div>
+            <div class="card-tags">${tagsHtml}</div>
+          </div>
+        `;
+
+        card.querySelector('.card-image-wrap').addEventListener('click', () => {
+          document.getElementById('lightbox-img').src = item.url;
+          document.getElementById('lightbox-modal').classList.add('active');
         });
 
-        // Fetch data from repo's ./data.json
-        async function fetchGalleryData() {
-            try {
-                // cache-bust param to prevent stale data on GitHub Pages
-                const response = await fetch('./data.json?t=' + Date.now());
-                if (!response.ok) throw new Error('Data file not found or inaccessible');
-                
-                const data = await response.json();
-                if (Array.isArray(data)) {
-                    galleryImages = data;
-                } else {
-                    galleryImages = [];
-                }
-            } catch (error) {
-                console.warn('Could not load data.json or file is empty:', error);
-                galleryImages = [];
-            } finally {
-                renderGallery();
-            }
+        grid.appendChild(card);
+      });
+    }
+
+    // Lightbox close
+    document.getElementById('lightbox-close').addEventListener('click', () => {
+      document.getElementById('lightbox-modal').classList.remove('active');
+    });
+
+    // === 3. NIKITA YOUTUBE CLICKER + SAVE/EXPORT/IMPORT ===
+    let game = {
+      score: 0,
+      clickPower: 1,
+      autoPower: 0,
+      costClick: 10,
+      costAuto: 50
+    };
+
+    function loadGame() {
+      const saved = localStorage.getItem('nikita_clicker_save');
+      if (saved) {
+        try { Object.assign(game, JSON.parse(saved)); } catch(e) {}
+      }
+      updateClickerUI();
+    }
+
+    function saveGame() {
+      localStorage.setItem('nikita_clicker_save', JSON.stringify(game));
+    }
+
+    function updateClickerUI() {
+      document.getElementById('clicker-score').textContent = Math.floor(game.score);
+      document.getElementById('cost-click').textContent = game.costClick;
+      document.getElementById('cost-auto').textContent = game.costAuto;
+
+      document.getElementById('upg-click').disabled = game.score < game.costClick;
+      document.getElementById('upg-auto').disabled = game.score < game.costAuto;
+    }
+
+    // Target Click
+    document.getElementById('click-target').addEventListener('click', () => {
+      game.score += game.clickPower;
+      saveGame();
+      updateClickerUI();
+    });
+
+    // Upgrades
+    document.getElementById('upg-click').addEventListener('click', () => {
+      if (game.score >= game.costClick) {
+        game.score -= game.costClick;
+        game.clickPower += 1;
+        game.costClick = Math.floor(game.costClick * 1.5);
+        saveGame();
+        updateClickerUI();
+      }
+    });
+
+    document.getElementById('upg-auto').addEventListener('click', () => {
+      if (game.score >= game.costAuto) {
+        game.score -= game.costAuto;
+        game.autoPower += 1;
+        game.costAuto = Math.floor(game.costAuto * 1.6);
+        saveGame();
+        updateClickerUI();
+      }
+    });
+
+    // Auto clicker loop
+    setInterval(() => {
+      if (game.autoPower > 0) {
+        game.score += game.autoPower;
+        saveGame();
+        updateClickerUI();
+      }
+    }, 1000);
+
+    // Export / Import
+    document.getElementById('export-btn').addEventListener('click', () => {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(game));
+      const a = document.createElement('a');
+      a.href = dataStr;
+      a.download = `nikita_clicker_save.json`;
+      a.click();
+    });
+
+    document.getElementById('import-btn').addEventListener('click', () => {
+      document.getElementById('import-file').click();
+    });
+
+    document.getElementById('import-file').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const imported = JSON.parse(event.target.result);
+          if (typeof imported.score === 'number') {
+            game = imported;
+            saveGame();
+            updateClickerUI();
+            alert('Прогресс успешно загружен!');
+          }
+        } catch (err) {
+          alert('Ошибка чтения файла сохранения!');
         }
+      };
+      reader.readAsText(file);
+    });
 
-        // Render Gallery Grid
-        function renderGallery() {
-            photoCountBadge.textContent = galleryImages.length;
+    // Clicker Modal Controls
+    const clickerModal = document.getElementById('clicker-modal');
+    
+    function openClicker() {
+      clickerModal.classList.add('active');
+    }
+    
+    function closeClicker() {
+      clickerModal.classList.remove('active');
+    }
 
-            if (!galleryImages || galleryImages.length === 0) {
-                emptyState.classList.remove('hidden');
-                emptyState.classList.add('flex');
-                galleryGrid.classList.add('hidden');
-                galleryGrid.innerHTML = '';
-                return;
-            }
+    document.getElementById('open-clicker-btn').addEventListener('click', openClicker);
+    document.getElementById('clicker-close').addEventListener('click', closeClicker);
 
-            emptyState.classList.add('hidden');
-            emptyState.classList.remove('flex');
-            galleryGrid.classList.remove('hidden');
-
-            galleryGrid.innerHTML = galleryImages.map((img, index) => `
-                <div class="glass-card rounded-2xl overflow-hidden group flex flex-col transition-all duration-300 hover:-translate-y-1 relative">
-                    <div class="relative aspect-square overflow-hidden bg-black/40 cursor-pointer" onclick="openLightbox(${index})">
-                        <img src="${escapeHtml(img.url)}" 
-                             alt="${escapeHtml(img.caption || 'Архивное фото')}" 
-                             loading="lazy"
-                             onerror="this.onerror=null; this.src='https://placehold.co/600x600/170606/dc143c?text= Ошибка+загрузки';"
-                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
-                        <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
-                            <span class="text-xs text-white font-medium flex items-center gap-1.5">
-                                <i class="fa-solid fa-magnifying-glass-plus text-crimsonAccent"></i> Нажмите чтобы увеличить
-                            </span>
-                        </div>
-                    </div>
-                    
-                    <div class="p-3.5 flex items-center justify-between gap-2 border-t border-red-900/20 bg-black/30">
-                        <p class="text-xs text-gray-300 font-medium truncate">
-                            ${img.caption ? escapeHtml(img.caption) : '<span class="text-gray-600 italic">Без названия</span>'}
-                        </p>
-                        <a href="${escapeHtml(img.url)}" target="_blank" onclick="event.stopPropagation()" title="Открыть оригинал" class="text-xs text-red-400 hover:text-red-300 p-1">
-                            <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
+    // Hotkey Y
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'y' || e.key === 'Y' || e.key === 'н' || e.key === 'Н') {
+        if (clickerModal.classList.contains('active')) {
+          closeClicker();
+        } else {
+          openClicker();
         }
+      }
+    });
 
-        // Lightbox Zoom Logic
-        window.openLightbox = function(index) {
-            const item = galleryImages[index];
-            if (!item) return;
-
-            lightboxImage.src = item.url;
-            lightboxCaption.textContent = item.caption || 'Архивное фото';
-            lightboxOpenLink.href = item.url;
-            lightboxModal.classList.remove('hidden');
-            lightboxModal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
-        };
-
-        function closeLightbox() {
-            lightboxModal.classList.add('hidden');
-            lightboxModal.classList.remove('flex');
-            lightboxImage.src = '';
-            document.body.style.overflow = '';
-        }
-
-        closeLightboxBtn.addEventListener('click', closeLightbox);
-        lightboxModal.addEventListener('click', (e) => {
-            if (e.target === lightboxModal || e.target.id === 'lightboxImage') {
-                closeLightbox();
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && !lightboxModal.classList.contains('hidden')) {
-                closeLightbox();
-            }
-        });
-
-        // Welcome Modal Listeners
-        welcomeBtn.addEventListener('click', () => welcomeModal.classList.remove('hidden'));
-        closeWelcomeBtn.addEventListener('click', () => welcomeModal.classList.add('hidden'));
-        dismissWelcomeBtn.addEventListener('click', () => {
-            welcomeModal.classList.add('hidden');
-            localStorage.setItem('nikita_archive_welcome_seen', 'true');
-        });
-
-        // Escape HTML Helper
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>"']/g, function(m) {
-                return {
-                    '&': '&amp;',
-                    '<': '&lt;',
-                    '>': '&gt;',
-                    '"': '&quot;',
-                    "'": '&#039;'
-                }[m];
-            });
-        }
-    </script>
+    // Init
+    loadGallery();
+    loadGame();
+  </script>
 </body>
 </html>
