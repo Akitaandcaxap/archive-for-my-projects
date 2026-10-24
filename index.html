@@ -77,6 +77,12 @@
       font-size: 1.2rem;
     }
 
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
     .uptime-badge {
       background: rgba(230, 57, 70, 0.1);
       border: 1px solid var(--border-color);
@@ -98,11 +104,11 @@
       background: rgba(230, 57, 70, 0.15);
       color: var(--text-color);
       border: 1px solid var(--border-color);
-      padding: 0.5rem 1rem;
+      padding: 0.4rem 0.9rem;
       border-radius: 8px;
       cursor: pointer;
       transition: all 0.2s ease;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -190,24 +196,37 @@
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(230, 57, 70, 0.2);
     }
 
-    .card-image-wrap {
+    .card-media-wrap {
       width: 100%;
       height: 220px;
       overflow: hidden;
-      background: rgba(0, 0, 0, 0.3);
+      background: rgba(0, 0, 0, 0.4);
       cursor: pointer;
       position: relative;
     }
 
-    .card-image {
+    .card-media {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: transform 0.5s ease;
     }
 
-    .card:hover .card-image {
+    .card:hover .card-media {
       transform: scale(1.05);
+    }
+
+    .video-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(230, 57, 70, 0.85);
+      color: #fff;
+      font-size: 0.75rem;
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      backdrop-filter: blur(4px);
     }
 
     .card-content {
@@ -253,7 +272,7 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.85);
+      background: rgba(0, 0, 0, 0.88);
       backdrop-filter: blur(8px);
       display: flex;
       align-items: center;
@@ -274,7 +293,7 @@
       background: #14080a;
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      max-width: 500px;
+      max-width: 520px;
       width: 100%;
       padding: 1.5rem;
       position: relative;
@@ -375,12 +394,45 @@
       flex-wrap: wrap;
     }
 
-    /* Lightbox */
-    .lightbox-img {
+    /* Lightbox Media */
+    .lightbox-media {
       max-width: 90vw;
       max-height: 85vh;
       border-radius: 8px;
       object-fit: contain;
+    }
+
+    /* Changelog Styling */
+    .changelog-content {
+      margin-top: 1rem;
+      text-align: left;
+      line-height: 1.6;
+      font-size: 0.95rem;
+    }
+
+    .changelog-content h3 {
+      color: var(--accent-color);
+      margin-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 0.4rem;
+    }
+
+    .changelog-content ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .changelog-content li {
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .changelog-content li::before {
+      content: "•";
+      color: var(--accent-color);
+      font-weight: bold;
     }
 
     footer {
@@ -402,8 +454,11 @@
         <span>NikitaYoutubeArchive</span>
       </a>
 
-      <div class="uptime-badge">
-        Сайт выживает: <span id="uptime-counter">0д 0ч 0м 0с</span>
+      <div class="header-right">
+        <div class="uptime-badge">
+          Сайт выживает: <span id="uptime-counter">0д 0ч 0м 0с</span>
+        </div>
+        <button class="btn" id="changelog-btn">📋 v1.1</button>
       </div>
     </div>
   </header>
@@ -419,17 +474,33 @@
     <div id="gallery-grid" class="gallery-grid"></div>
     <div id="empty-state" class="empty-state" style="display: none;">
       <h3>Упс... пока что тут ничего нет...</h3>
-      <p style="color: var(--text-muted); margin-top: 0.5rem;">Ждем пока админ загрузит хотя бы одно фото.</p>
+      <p style="color: var(--text-muted); margin-top: 0.5rem;">Ждем пока админ загрузит хотя бы одно фото или видео.</p>
     </div>
   </main>
 
   <!-- Lightbox Modal -->
   <div class="modal-overlay" id="lightbox-modal">
     <button class="modal-close" id="lightbox-close">&times;</button>
-    <img src="" alt="" class="lightbox-img" id="lightbox-img">
+    <div id="lightbox-content"></div>
   </div>
 
-  <!-- Clicker Game Modal -->
+  <!-- Changelog Modal -->
+  <div class="modal-overlay" id="changelog-modal">
+    <div class="modal-card">
+      <button class="modal-close" id="changelog-close">&times;</button>
+      <div class="changelog-content">
+        <h3>Обновление v1.1 (Changelog)</h3>
+        <ul>
+          <li><strong>Поддержка видео:</strong> Теперь в <code>data.json</code> можно загружать видеоролики (.mp4, .webm, .mov). Они автоматически проигрываются в галерее и открываются в полноэкранном плеере.</li>
+          <li><strong>Живой счётчик выживания:</strong> Аптайм сайта теперь отсчитывает время с точностью до секунд.</li>
+          <li><strong>Хэштеги и фильтрация:</strong> Добавлена умная система разбора тегов прямо из описания (например, <code>#смехуятина</code>).</li>
+          <li><strong>Исправление ошибок:</strong> Улучшена обработка ошибок чтения JSON-файла.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Secret Clicker Game Modal -->
   <div class="modal-overlay" id="clicker-modal">
     <div class="modal-card clicker-modal">
       <button class="modal-close" id="clicker-close">&times;</button>
@@ -484,9 +555,13 @@
     setInterval(updateUptime, 1000);
     updateUptime();
 
-    // === 2. GALLERY & HASHTAGS ===
+    // === 2. GALLERY, VIDEO DETECT & HASHTAGS ===
     let allPhotos = [];
     let currentTag = 'all';
+
+    function isVideoUrl(url) {
+      return /\.(mp4|webm|ogg|mov)(\?.*)?$/i.test(url) || url.includes('/video/') || url.includes('format=mp4');
+    }
 
     async function loadGallery() {
       try {
@@ -565,10 +640,15 @@
 
         const tags = extractTags(item);
         const tagsHtml = tags.map(t => `<span class="inline-tag">#${t}</span>`).join(' ');
+        const isVid = isVideoUrl(item.url);
+
+        const mediaElement = isVid 
+          ? `<video src="${item.url}" class="card-media" autoplay loop muted playsinline></video><div class="video-badge">VIDEO</div>`
+          : `<img src="${item.url}" alt="Media" class="card-media" loading="lazy">`;
 
         card.innerHTML = `
-          <div class="card-image-wrap">
-            <img src="${item.url}" alt="Photo" class="card-image" loading="lazy">
+          <div class="card-media-wrap">
+            ${mediaElement}
           </div>
           <div class="card-content">
             <div class="card-caption">${item.caption || ''}</div>
@@ -576,8 +656,13 @@
           </div>
         `;
 
-        card.querySelector('.card-image-wrap').addEventListener('click', () => {
-          document.getElementById('lightbox-img').src = item.url;
+        card.querySelector('.card-media-wrap').addEventListener('click', () => {
+          const lightboxContent = document.getElementById('lightbox-content');
+          if (isVid) {
+            lightboxContent.innerHTML = `<video src="${item.url}" class="lightbox-media" controls autoplay></video>`;
+          } else {
+            lightboxContent.innerHTML = `<img src="${item.url}" class="lightbox-media">`;
+          }
           document.getElementById('lightbox-modal').classList.add('active');
         });
 
@@ -588,9 +673,15 @@
     // Lightbox close
     document.getElementById('lightbox-close').addEventListener('click', () => {
       document.getElementById('lightbox-modal').classList.remove('active');
+      document.getElementById('lightbox-content').innerHTML = '';
     });
 
-    // === 3. SECRET CLICKER + CUSTOM SKIN ===
+    // === 3. CHANGELOG MODAL ===
+    const changelogModal = document.getElementById('changelog-modal');
+    document.getElementById('changelog-btn').addEventListener('click', () => changelogModal.classList.add('active'));
+    document.getElementById('changelog-close').addEventListener('click', () => changelogModal.classList.remove('active'));
+
+    // === 4. SECRET CLICKER + CUSTOM SKIN ===
     let game = {
       score: 0,
       clickPower: 1,
